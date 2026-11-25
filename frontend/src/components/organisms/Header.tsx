@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
+import { CloseIcon, MenuIcon } from "@/components/atoms/icons";
 import { featuredTest } from "@/data/tests";
 
 const links = [
@@ -55,23 +56,7 @@ export function Header() {
                         aria-label={open ? "Cerrar menú" : "Abrir menú"}
                         onClick={() => setOpen((v) => !v)}
                     >
-                        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
-                            {open ? (
-                                <path
-                                    d="M4 4l14 14M18 4L4 18"
-                                    stroke="currentColor"
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                />
-                            ) : (
-                                <path
-                                    d="M3 6h16M3 11h16M3 16h16"
-                                    stroke="currentColor"
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                />
-                            )}
-                        </svg>
+                        {open ? <CloseIcon width={22} height={22} /> : <MenuIcon width={22} height={22} />}
                     </button>
                 </div>
             </nav>

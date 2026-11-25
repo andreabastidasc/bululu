@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { InstagramIcon } from "@/components/atoms/icons";
 import { Crowd } from "@/components/molecules/Crowd";
 import { colors as c } from "@/data/colors";
 
@@ -22,6 +23,15 @@ export function Footer() {
                             {l.label}
                         </Link>
                     ))}
+                    <a
+                        href="https://www.instagram.com/bululu.world/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 py-2.5 no-underline hover:underline"
+                    >
+                        <InstagramIcon width={20} height={20} />
+                        @bululu.world
+                    </a>
                 </nav>
             </div>
             <Crowd

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRightIcon } from "@/components/atoms/icons";
 
 export type WorldCardProps = {
     title: string;
@@ -22,16 +23,7 @@ export function WorldCard({ title, text, color, href, cta }: WorldCardProps) {
                     className="mt-auto inline-flex min-h-11 items-center gap-1.5 pt-2 font-bold underline underline-offset-4"
                 >
                     {cta}
-                    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-                        <path
-                            d="M4 9h10M10 5l4 4-4 4"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
+                    <ArrowRightIcon width={18} height={18} />
                 </Link>
             ) : (
                 <span className="mt-auto inline-block rounded-2xl bg-ink px-3 py-1.5 font-bold text-paper">
