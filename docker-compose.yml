@@ -6,6 +6,12 @@ x-backend-env: &backend-env
     POSTGRES_PORT: "5432"
     DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-dev-only-insecure-key}
     DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,backend,backend-prod}
+    FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+    GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME:-}
+    DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL:-}
+    DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD:-}
 
 services:
     db:
@@ -63,6 +69,8 @@ services:
         environment:
             <<: *backend-env
             DJANGO_DEBUG: "false"
+        volumes:
+            - media-data:/app/media
         ports:
             - "8000:8000"
         depends_on:
@@ -75,6 +83,8 @@ services:
         build:
             context: ./frontend
             target: prod
+            args:
+                API_URL: http://backend-prod:8000
         environment:
             API_URL: http://backend-prod:8000
         ports:
@@ -85,3 +95,4 @@ services:
 
 volumes:
     db-data:
+    media-data:
