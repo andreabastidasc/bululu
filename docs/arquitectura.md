@@ -9,6 +9,8 @@
 | Tipografías | Google Fonts vía `next/font` (Bagel Fat One y Rubik) |
 | Formato | Prettier + `prettier-plugin-tailwindcss` |
 | Backend | Django 5.2 + Django REST Framework, servido con Gunicorn |
+| Back office | Admin de Django con el tema Unfold y el editor django-prose-editor |
+| Cuentas | django-allauth (código por email y Google), en modo headless |
 | Base de datos | PostgreSQL 17 (SQLite si se corre el backend sin Docker) |
 | Contenedores | Docker y Docker Compose, orquestados desde la raíz |
 
@@ -29,7 +31,9 @@ bululu/
 │   ├── Dockerfile
 │   ├── requirements.txt
 │   ├── config/              Configuración de Django (settings, urls)
-│   └── core/                App base: por ahora, el chequeo de salud /api/health/
+│   ├── core/                Opciones compartidas (colores, bululitos, estados) y /api/health/
+│   ├── accounts/            Perfil de usuario (nombre visible, Instagram)
+│   └── revista/             Artículos por bloques y comentarios
 └── frontend/
     ├── Dockerfile
     ├── public/              Archivos estáticos (robots.txt, imágenes, favicon)
@@ -45,23 +49,19 @@ bululu/
 
 ## Cómo fluyen los datos
 
-Hoy:
-
 ```
-src/data/*.ts  →  app/page.tsx  →  organisms  →  molecules  →  atoms
+Django (admin + API)  →  src/lib/api.ts  →  app/…/page.tsx  →  organisms  →  molecules  →  atoms
 ```
 
-`page.tsx` toma los datos y se los pasa a las secciones. Los componentes no importan datos
-por su cuenta (salvo `Header`, que enlaza al test de la semana), así es fácil cambiar el origen.
+Las páginas piden los datos en el servidor con las funciones de `src/lib/api.ts` y se los pasan a las
+secciones. Dentro de Docker, el frontend llega al backend por `API_URL` (`http://backend:8000`).
 
-Cuando el contenido pase al backend:
+| Contenido | De dónde sale hoy |
+|---|---|
+| Artículos y comentarios | API (`getArticles`, `getArticle`, `getComments`) |
+| Test de la semana y textos de "Mundo Bululú" | `src/data/` (pasan a la API en el próximo paso) |
 
-```
-Django (admin + API)  →  fetch en app/page.tsx  →  organisms  →  …
-```
-
-Dentro de Docker, el frontend llega al backend por `API_URL` (`http://backend:8000`). Solo cambia de dónde salen los datos: los componentes quedan igual. Los tipos de
-`src/data/` (`TestSummary`, `ArticleSummary`) sirven de contrato con la API.
+Los tipos de `src/lib/api.ts` (`ArticleSummary`, `Article`, `Comment`) son el contrato con la API.
 
 ## Componentes de cliente y de servidor
 
@@ -79,6 +79,37 @@ interacción en el navegador:
 navegador ──► web (Next.js, :3000) ──► backend (Django, :8000) ──► db (PostgreSQL, :5432)
 ```
 
-Hoy el backend tiene el panel de administración y un único endpoint, `GET /api/health/`, que
-confirma que la API y la base de datos responden. Los modelos de tests, resultados y artículos
-son el próximo paso.
+El frontend reenvía `/api/`, `/_allauth/`, `/accounts/` y `/media/` al backend (`rewrites` en
+`next.config.ts`). Así el navegador habla con un solo dominio y las cookies de sesión funcionan sin
+configurar CORS.
+
+## Modelo de datos
+
+| App | Modelos |
+|---|---|
+| `revista` | `Article` (portada, estado, fecha, idioma) → `ArticleBlock` (texto enriquecido o imagen, ordenables) · `Comment` (con una respuesta de nivel, ocultable) |
+| `accounts` | `Profile` (uno por usuario, se crea solo) |
+
+Los artículos tienen `status` (borrador o publicado) y `published_at`. Solo se muestra lo publicado
+con fecha pasada, así se pueden programar publicaciones.
+
+### Idiomas (preparado, sin usar todavía)
+
+Cada artículo tiene `language` (`es` o `en`) y `translation_of`, que apunta al artículo original. Una
+traducción es otro artículo, con sus propios bloques, y puede repetir la dirección en otro idioma
+(`slug` es único por idioma). La API devuelve español por defecto; con `?lang=en` devolverá inglés.
+Por ahora estos campos no aparecen en el back office.
+
+## API
+
+| Método | Ruta | Para qué |
+|---|---|---|
+| GET | `/api/health/` | Chequeo de salud |
+| GET | `/api/articulos/` | Artículos publicados (en español; `?lang=en` para inglés) |
+| GET | `/api/articulos/<slug>/` | Un artículo con sus bloques |
+| GET | `/api/articulos/<slug>/comentarios/` | Comentarios visibles con sus respuestas |
+| POST | `/api/articulos/<slug>/comentarios/` | Comentar (requiere sesión). Body: `{"body", "parent"?}` |
+| GET, PATCH | `/api/yo/` | Perfil de la persona con sesión |
+| — | `/_allauth/browser/v1/…` | Registro, inicio de sesión por código y con Google (django-allauth headless) |
+
+Los tests todavía no están en el backend: el test de la semana vive en `frontend/src/data/tests.ts`.

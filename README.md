@@ -16,7 +16,7 @@ docker compose up
 |---|---|
 | Web | http://localhost:3000 |
 | API | http://localhost:8000/api/health/ |
-| Panel de administración | http://localhost:8000/admin/ |
+| Back office | http://localhost:8000/admin/ |
 
 Para correr cada parte sin Docker, ver [Desarrollo](./docs/desarrollo.md).
 
@@ -34,6 +34,7 @@ bululu/
 
 | Documento | De qué trata |
 |---|---|
+| [Back office](./docs/back-office.md) | Cargar artículos y moderar comentarios |
 | [Desarrollo](./docs/desarrollo.md) | Levantar el proyecto, Docker, scripts y convenciones |
 | [Arquitectura](./docs/arquitectura.md) | Stack, carpetas y flujo de datos |
 | [Componentes](./docs/componentes.md) | Atomic design y bululitos |
