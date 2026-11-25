@@ -24,10 +24,6 @@ export function Footer() {
                     ))}
                 </nav>
             </div>
-            <p className="wrap mt-5 text-sm opacity-90">
-                Los tests están hechos por fans. Bululú no está afiliado a Rockstar Games ni a otras marcas o juegos
-                mencionados.
-            </p>
             <Crowd
                 className="mt-6 block aspect-[1000/160] h-auto w-full"
                 viewBox="0 170 1000 160"
