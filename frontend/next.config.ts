@@ -7,12 +7,10 @@ const nextConfig: NextConfig = {
     output: "standalone",
     skipTrailingSlashRedirect: true,
     async rewrites() {
-        return [
-            { source: "/api/:path*", destination: `${apiUrl}/api/:path*` },
-            { source: "/_allauth/:path*", destination: `${apiUrl}/_allauth/:path*` },
-            { source: "/accounts/:path*", destination: `${apiUrl}/accounts/:path*` },
-            { source: "/media/:path*", destination: `${apiUrl}/media/:path*` },
-        ];
+        return ["api", "_allauth", "accounts", "media"].flatMap((prefix) => [
+            { source: `/${prefix}/:path*/`, destination: `${apiUrl}/${prefix}/:path*/` },
+            { source: `/${prefix}/:path*`, destination: `${apiUrl}/${prefix}/:path*` },
+        ]);
     },
 };
 
