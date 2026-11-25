@@ -1,6 +1,6 @@
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { Magazine } from "@/components/organisms/Magazine";
-import type { ArticleSummary } from "@/data/articles";
+import type { ArticleSummary } from "@/lib/api";
 
 export function MagazineSection({ articles }: { articles: ArticleSummary[] }) {
     return (
@@ -9,7 +9,13 @@ export function MagazineSection({ articles }: { articles: ArticleSummary[] }) {
                 <SectionTitle id="revista-title">La revista</SectionTitle>
                 <span className="text-sm text-ink-soft">Historias, estudios y cosas que nos copan</span>
             </div>
-            <Magazine articles={articles} />
+            {articles.length > 0 ? (
+                <Magazine articles={articles} />
+            ) : (
+                <p className="rounded-3xl border-3 border-dashed border-ink/30 p-8 text-center text-ink-soft">
+                    Estamos escribiendo los primeros artículos. Muy pronto, por acá.
+                </p>
+            )}
         </section>
     );
 }

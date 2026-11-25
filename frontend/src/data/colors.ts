@@ -9,3 +9,12 @@ export const colors = {
     ink: "#1B1530",
     paper: "#FFF6E9",
 } as const;
+
+export const mascotOn = {
+    cobalt: colors.lemon,
+    lemon: colors.coral,
+    coral: colors.lemon,
+    mint: colors.lemon,
+    bubblegum: colors.lilac,
+    lilac: colors.bubblegum,
+} as const;

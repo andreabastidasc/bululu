@@ -71,3 +71,93 @@
         }
     }
 }
+
+@layer components {
+    .rich-text {
+        font-size: 19px;
+        line-height: 1.7;
+    }
+
+    .rich-text > * + * {
+        margin-top: 1em;
+    }
+
+    .rich-text p {
+        margin: 0;
+    }
+
+    .rich-text h2,
+    .rich-text h3 {
+        margin-bottom: 0;
+        font-family: var(--font-display);
+        font-weight: 400;
+        line-height: 1.1;
+    }
+
+    .rich-text h2 {
+        margin-top: 1.6em;
+        font-size: 34px;
+    }
+
+    .rich-text h3 {
+        margin-top: 1.4em;
+        font-size: 26px;
+    }
+
+    .rich-text a {
+        color: var(--color-cobalt);
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .rich-text a:hover {
+        color: var(--color-ink);
+    }
+
+    .rich-text strong {
+        font-weight: 700;
+    }
+
+    .rich-text ul,
+    .rich-text ol {
+        margin-bottom: 0;
+        padding-left: 1.4em;
+    }
+
+    .rich-text ul {
+        list-style: disc;
+    }
+
+    .rich-text ol {
+        list-style: decimal;
+    }
+
+    .rich-text li + li {
+        margin-top: 0.4em;
+    }
+
+    .rich-text li::marker {
+        color: var(--color-coral);
+        font-weight: 700;
+    }
+
+    .rich-text blockquote {
+        margin-inline: 0;
+        margin-bottom: 0;
+        padding: 20px 24px;
+        border: 3px solid var(--color-ink);
+        border-radius: 24px;
+        background: var(--color-lemon);
+        box-shadow: var(--shadow-hard-sm);
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 1.45;
+    }
+
+    .rich-text hr {
+        margin-block: 2em;
+        border: 0;
+        border-top: 3px dashed color-mix(in srgb, var(--color-ink) 25%, transparent);
+    }
+}

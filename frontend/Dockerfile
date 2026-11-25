@@ -14,6 +14,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 FROM base AS build
+ARG API_URL=http://backend-prod:8000
+ENV API_URL=$API_URL
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build

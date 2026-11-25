@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { MagazinePage } from "@/components/molecules/MagazinePage";
 import { MagazinePager } from "@/components/molecules/MagazinePager";
-import type { ArticleSummary } from "@/data/articles";
+import type { ArticleSummary } from "@/lib/api";
 
 export function Magazine({ articles }: { articles: ArticleSummary[] }) {
     const track = useRef<HTMLDivElement>(null);
