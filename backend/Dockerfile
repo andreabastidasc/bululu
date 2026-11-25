@@ -14,7 +14,8 @@ CMD ["sh", "-c", "python manage.py migrate && python manage.py create_admin && p
 FROM base AS prod
 RUN useradd --system --create-home django
 COPY --chown=django:django . .
-RUN DJANGO_SECRET_KEY=build-only python manage.py collectstatic --noinput
+RUN DJANGO_SECRET_KEY=build-only python manage.py collectstatic --noinput \
+    && mkdir -p /app/media && chown django:django /app/media
 USER django
 EXPOSE 8000
 CMD ["sh", "-c", "python manage.py migrate && python manage.py create_admin && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3"]

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/organisms/ArticleBody";
+import { ArticleReader } from "@/components/organisms/ArticleReader";
 import { ArticleHeader } from "@/components/organisms/ArticleHeader";
 import { CommentsSection } from "@/components/organisms/CommentsSection";
 import { SiteLayout } from "@/components/templates/SiteLayout";
@@ -33,7 +34,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
     return (
         <SiteLayout>
-            <article>
+            <ArticleReader article={article} />
+            <article className="max-md:hidden">
                 <ArticleHeader article={article} />
                 <ArticleBody article={article} />
             </article>

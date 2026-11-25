@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+
+export { formatDate } from "./format";
 import type { BululitoName } from "@/components/atoms/bululitos";
 import type { colors } from "@/data/colors";
 
@@ -111,9 +113,4 @@ export async function getSession(): Promise<Session> {
         console.error(error);
     }
     return { authenticated: false, is_staff: false, username: null };
-}
-
-export function formatDate(iso: string | null): string {
-    if (!iso) return "";
-    return new Intl.DateTimeFormat("es", { day: "numeric", month: "long", year: "numeric" }).format(new Date(iso));
 }
