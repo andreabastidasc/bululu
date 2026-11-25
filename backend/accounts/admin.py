@@ -25,6 +25,9 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     inlines = [ProfileInline]
     list_display = ["email", "display_name", "is_staff", "date_joined"]
 
+    def get_inlines(self, request, obj):
+        return self.inlines if obj else []
+
     @admin.display(description="nombre visible")
     def display_name(self, obj):
         profile = getattr(obj, "profile", None)
