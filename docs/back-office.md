@@ -39,3 +39,15 @@ Solo pueden comentar personas con cuenta. Los comentarios se publican al instant
 
 **Revista › Comentarios**: para sacar uno de la web, márcalo como **Oculto** (o selecciona varios y usa
 la acción **Ocultar comentarios seleccionados**). No se borran: se pueden volver a mostrar.
+
+## Ver borradores en el sitio
+
+Los admins pueden entrar al sitio en `/login` con su mismo usuario y contraseña del back office. Mientras tienen la sesión abierta:
+
+- Ven una barra amarilla arriba ("Modo equipo") con un link al back office y el botón **Salir**.
+- La portada y las páginas de artículo también muestran los borradores, marcados con «Borrador».
+- El público nunca ve los borradores: la API (`/api/articulos/`) solo los devuelve a usuarios staff.
+
+`/login` no está enlazada desde el sitio y no la indexan los buscadores. Solo pueden entrar usuarios marcados como **Es staff**.
+
+En producción, `DJANGO_ALLOWED_HOSTS` tiene que incluir el dominio del front (por ejemplo `www.bululuworld.com`), porque el login pasa por el proxy de Next.

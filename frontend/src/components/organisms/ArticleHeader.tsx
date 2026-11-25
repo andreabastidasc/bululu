@@ -18,7 +18,10 @@ export function ArticleHeader({ article }: { article: Article }) {
             style={{ background: colors[article.cover_color] }}
         >
             <div className="wrap relative z-10 flex flex-col items-start gap-5 pt-10 pb-12 md:pt-14 md:pb-16">
-                <Pill>{article.category}</Pill>
+                <div className="flex flex-wrap gap-2">
+                    <Pill>{article.category}</Pill>
+                    {article.status === "draft" && <Pill tone="ink">Borrador</Pill>}
+                </div>
                 <h1 className="max-w-[820px] font-display text-[clamp(40px,5.6vw,72px)] leading-[1.02] font-normal">
                     {article.title}
                 </h1>

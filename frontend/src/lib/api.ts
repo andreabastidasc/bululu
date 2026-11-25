@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import type { BululitoName } from "@/components/atoms/bululitos";
 import type { colors } from "@/data/colors";
 
@@ -5,8 +6,11 @@ export type BrandColorKey = Exclude<keyof typeof colors, "ink" | "paper">;
 
 export type Language = "es" | "en";
 
+export type ArticleStatus = "draft" | "published";
+
 export type ArticleSummary = {
     slug: string;
+    status: ArticleStatus;
     language: Language;
     title: string;
     category: string;
@@ -44,8 +48,20 @@ export type Comment = CommentReply & {
 
 const API_URL = (process.env.API_URL ?? "http://localhost:8000").replace(/\/$/, "");
 
+export type Session = {
+    authenticated: boolean;
+    is_staff: boolean;
+    username: string | null;
+};
+
+export const backOfficeUrl = `${API_URL}/admin/`;
+
 async function get<T>(path: string): Promise<T | null> {
-    const response = await fetch(`${API_URL}${path}`, { cache: "no-store" });
+    const cookie = (await cookies()).toString();
+    const response = await fetch(`${API_URL}${path}`, {
+        cache: "no-store",
+        headers: cookie ? { cookie } : undefined,
+    });
     if (response.status === 404) return null;
     if (!response.ok) throw new Error(`La API respondió ${response.status} en ${path}`);
     return response.json() as Promise<T>;
@@ -85,6 +101,16 @@ export async function getArticle(slug: string): Promise<Article | null> {
 
 export async function getComments(slug: string): Promise<Comment[]> {
     return (await get<Comment[]>(`/api/articulos/${encodeURIComponent(slug)}/comentarios/`)) ?? [];
+}
+
+export async function getSession(): Promise<Session> {
+    try {
+        const session = await get<Session>("/api/session/");
+        if (session) return session;
+    } catch (error) {
+        console.error(error);
+    }
+    return { authenticated: false, is_staff: false, username: null };
 }
 
 export function formatDate(iso: string | null): string {

@@ -40,6 +40,11 @@ export function MagazinePage({ article, number, total }: MagazinePageProps) {
                     )}
                     <div className="relative z-10 flex flex-wrap gap-2 px-4.5 py-4">
                         <Pill size="sm">{article.category}</Pill>
+                        {article.status === "draft" && (
+                            <Pill size="sm" tone="ink">
+                                Borrador
+                            </Pill>
+                        )}
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col gap-2.5 px-5 pt-5 pb-4">
