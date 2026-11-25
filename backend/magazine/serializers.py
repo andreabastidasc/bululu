@@ -12,6 +12,7 @@ class ArticleSummarySerializer(serializers.ModelSerializer):
         model = Article
         fields = [
             "slug",
+            "status",
             "language",
             "title",
             "category",

@@ -14,18 +14,19 @@ from .serializers import (
 )
 
 
-def published_articles(request):
+def visible_articles(request):
     language = request.query_params.get("lang", Language.SPANISH)
     if language not in Language.values:
         language = Language.SPANISH
-    return Article.objects.published().filter(language=language)
+    articles = Article.objects.all() if request.user.is_staff else Article.objects.published()
+    return articles.filter(language=language)
 
 
 class ArticleListView(generics.ListAPIView):
     serializer_class = ArticleSummarySerializer
 
     def get_queryset(self):
-        return published_articles(self.request)
+        return visible_articles(self.request)
 
 
 class ArticleDetailView(generics.RetrieveAPIView):
@@ -33,7 +34,7 @@ class ArticleDetailView(generics.RetrieveAPIView):
     lookup_field = "slug"
 
     def get_queryset(self):
-        return published_articles(self.request).prefetch_related(
+        return visible_articles(self.request).prefetch_related(
             Prefetch("blocks", queryset=ArticleBlock.objects.order_by("order", "id"))
         )
 
@@ -46,7 +47,7 @@ class ArticleCommentsView(generics.ListCreateAPIView):
 
     def get_article(self):
         if not hasattr(self, "_article"):
-            self._article = get_object_or_404(published_articles(self.request), slug=self.kwargs["slug"])
+            self._article = get_object_or_404(visible_articles(self.request), slug=self.kwargs["slug"])
         return self._article
 
     def get_serializer_class(self):
